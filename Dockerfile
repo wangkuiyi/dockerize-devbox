@@ -99,9 +99,5 @@ RUN sudo sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/
 RUN sudo sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
 RUN sudo sh -c 'echo "export VISIBLE=now" >> /etc/profile'
-# We need to generate SSH keys to prevent SSHD from complaining.  The
-# option -q overwrite the key file.  The option -N '' skips prompts.
-#RUN yes y | sudo ssh-keygen -q -N '' -t dsa -f /etc/ssh/ssh_host_dsa_key
-#RUN yes y | sudo ssh-keygen -q -N '' -t rsa -f /etc/ssh/ssh_host_rsa_key
 EXPOSE 22
 CMD ["sudo", "/usr/sbin/sshd", "-D"]
