@@ -1,0 +1,107 @@
+# The purpose of this Dockerfile is to unify daily software
+# development environments.  We install compilers, editors, and all
+# other tools, together with their configurations, into a Docker
+# image, so engineers can run the Docker image (as a container) as
+# their unified development environment.
+#
+# To build the Docker image:
+#
+# docker build --build-arg USER=$USER -t dev .
+#
+# To run a Docker container given the image:
+#
+# docker run --rm -d --name dev -P
+#  -v /var/run/docker.sock:/var/run/docker.sock
+#  -v $HOME/.ssh:/home/$USER/.ssh
+#  -v $HOME/workspace:/workspace -w /workspace
+#  dev
+#
+# To SSH into the container and work on files in $HOME/workspace on
+# the host:
+#
+# ssh localhost -p $(docker port dev 22 | cut -f 2 -d ':')
+#
+FROM ubuntu:20.04
+
+# By default, we work as the root user in Docker containers.  Doing
+# so, new files created in the container and mapped to the host
+# filesystem would have owner root.  We want the file owner to be
+# $USER on the host.  To achive this goal, we need to create $USER in
+# the Docker image.  We define Docker bulid argument USER here, so
+# that we can run the following command to pass in $USER of the host
+# to the Docker image:
+#
+# docker build --build-arg USER=$USER ...
+ARG USER
+
+# We don't necessarily need $USER in the container to have the same
+# uid and gid as she has on the host, so we provide the following
+# default values; however, if you want, you can pass in the uid and
+# gid from the host.
+#
+# docker build --build-arg USER_ID=$(id -u) \
+#              --build-arg GROUP_ID=$(id -g)
+ARG USER_ID=1001
+ARG GROUP_ID=1001
+ARG HOME=/home/$USER
+
+# Now, create user (and its uid and gid) in the Docker image.
+RUN addgroup --gid $GROUP_ID $USER
+RUN adduser --home $HOME --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID $USER
+
+# As we are no longer root but $USER in the container, to do
+# priviliged operations like installing packages, we need the command
+# sudo.  Let's install it.
+RUN apt-get update && apt-get install -y sudo
+
+# When we run the sudo command, it would prompt for the password of
+# $USER.  Let's give a password to $USER in the container.
+RUN echo "$USER:hi" | chpasswd
+
+# To make $USER a sudoer, who can run sudo, we need to add her to the
+# group sudo.
+RUN usermod -aG sudo $USER
+
+# Also, to enable $USER to run docker commands in the container, we
+# need to add her to the group docker.  More than that, we need to
+# bind the Docker server's socket file from /var/run/docker.sock on
+# the host into the container when we start it.
+#
+# docker run -v /var/run/docker.sock:/var/run/docker.sock
+RUN addgroup docker
+RUN usermod -aG docker $USER
+
+# A step further, we want the sudo command doesn't require and prompt
+# password from $USER.
+RUN echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# With $USER fully set up in the Docker image, we can make it the
+# default user now.  Please be aware that we will need the sudo prefix
+# for all apt-get install commands in the rest of this Dockerfile,
+# because we are no longer root but $USER from here on.
+USER $USER
+WORKDIR $HOME
+
+# Of couse, we need to install the docker command in the Docker image.
+# Working on Ubuntu <20.0, we need to follow steps in
+# https://docs.docker.com/engine/install/ubuntu/; however, with Ubuntu
+# 20.04, we only need to run the following command.
+RUN sudo apt-get install -y docker.io
+
+# We need to install SSH server so users could SSH into the Docker
+# container.  This makes it easy to run the container on a powerful
+# server and SSH into it from your notebook computer.
+# The following commands come from
+# https://docs.docker.com/engine/examples/running_ssh_service/
+RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server
+RUN sudo mkdir /var/run/sshd
+RUN sudo sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sudo sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+ENV NOTVISIBLE "in users profile"
+RUN sudo sh -c 'echo "export VISIBLE=now" >> /etc/profile'
+# We need to generate SSH keys to prevent SSHD from complaining.  The
+# option -q overwrite the key file.  The option -N '' skips prompts.
+#RUN yes y | sudo ssh-keygen -q -N '' -t dsa -f /etc/ssh/ssh_host_dsa_key
+#RUN yes y | sudo ssh-keygen -q -N '' -t rsa -f /etc/ssh/ssh_host_rsa_key
+EXPOSE 22
+CMD ["sudo", "/usr/sbin/sshd", "-D"]
