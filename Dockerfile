@@ -1,4 +1,5 @@
-FROM ubuntu:20.04
+ARG FROM_IMAGE=ubuntu:20.04
+FROM $FROM_IMAGE
 
 # By default, we work as the root user in Docker containers.  Doing
 # so, new files created in the container and mapped to the host
