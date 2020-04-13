@@ -26,3 +26,9 @@ the host:
 ```bash
 ssh localhost -p $(docker port dev 22 | cut -f 2 -d ':')
 ```
+
+You should be able to run Docker commands in the container.  For example:
+
+```bash
+sudo docker version
+```
