@@ -13,10 +13,10 @@ docker build --build-arg USER=$USER -t dev .
 To run a Docker container given the image:
 
 ```bash
-docker run --rm -d --name dev -P \
+docker run --rm -d --name dev -p 2222:22 \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v $HOME/.ssh:/home/$USER/.ssh \
- -v $HOME/workspace:/workspace -w /workspace \
+ -v $HOME/work:/home/$USER/work \
  dev
 ```
 

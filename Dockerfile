@@ -58,7 +58,6 @@ RUN echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 # for all apt-get install commands in the rest of this Dockerfile,
 # because we are no longer root but $USER from here on.
 USER $USER
-WORKDIR $HOME
 
 # Of couse, we need to install the docker command in the Docker image.
 # Working on Ubuntu <20.0, we need to follow steps in
