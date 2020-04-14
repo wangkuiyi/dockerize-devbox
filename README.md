@@ -24,11 +24,27 @@ To SSH into the container and work on files in $HOME/workspace on
 the host:
 
 ```bash
-ssh localhost -p $(docker port dev 22 | cut -f 2 -d ':')
+ssh localhost -p 2222
 ```
 
-You should be able to run Docker commands in the container.  For example:
+You should be able to run Docker commands in the container.
 
 ```bash
 sudo docker version
 ```
+
+You can also connect to the container via SSH from Visual Studio Code.  To do so, you need to
+
+1. Follow [this guide](https://code.visualstudio.com/docs/remote/remote-overview) to install the Remote Development extension pack.
+
+1. Edit your SSH configuration file `~/.ssh/config` and add the following section.
+
+   ```
+   Host docker
+      UseKeychain yes
+      HostName localhost
+      User yi
+      Port 2222
+   ```
+
+Now, you can type F1 in VS Code and type the command `Remote-SSH: Connect to host...`, choose the host named `docker`, and connect.
