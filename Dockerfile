@@ -10,7 +10,7 @@ FROM $FROM_IMAGE
 # to the Docker image:
 #
 # docker build --build-arg USER=$USER ...
-ARG USER
+ARG USER=a
 
 # We don't necessarily need $USER in the container to have the same
 # uid and gid as she has on the host, so we provide the following
@@ -33,8 +33,8 @@ RUN adduser --home $HOME --disabled-password --gecos '' --uid $USER_ID --gid $GR
 RUN apt-get update && apt-get install -y sudo
 
 # When we run the sudo command, it would prompt for the password of
-# $USER.  Let's give a password to $USER in the container.
-RUN echo "$USER:hi" | chpasswd
+# $USER.  Let's give a password "a" to $USER in the container.
+RUN echo "$USER:a" | chpasswd
 
 # To make $USER a sudoer, who can run sudo, we need to add her to the
 # group sudo.
