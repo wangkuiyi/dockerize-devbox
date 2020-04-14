@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sudo apt-get install -y git bash-completion
+sudo apt-get -qq install -y git bash-completion

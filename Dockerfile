@@ -86,7 +86,10 @@ CMD ["sudo", "/usr/sbin/sshd", "-D"]
 # Please be aware that the use of sort introduces an explicit order of
 # execution.
 COPY . /dockerize-devbox
-RUN for i in $(du -a /dockerize-devbox | cut -f 2 | \
-               grep 'dockerize-.*\.sh$'| sort); do \
+RUN for i in $(du -a /dockerize-devbox/dockerize-* | \
+               cut -f 2 | \
+               grep 'dockerize-.*\.sh$'| \
+               sort); do \
+      echo "========= $i"; \
       . $i; \
     done
