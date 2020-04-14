@@ -46,8 +46,8 @@ RUN usermod -aG sudo $USER
 # the host into the container when we start it.
 #
 # docker run -v /var/run/docker.sock:/var/run/docker.sock
-RUN addgroup docker
-RUN usermod -aG docker $USER
+RUN groupadd docker
+RUN gpasswd -a $USER docker
 
 # A step further, we want the sudo command doesn't require and prompt
 # password from $USER.
