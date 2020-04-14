@@ -1,5 +1,7 @@
 # Dockerize DevBox
 
+[![Build Status](https://travis-ci.com/wangkuiyi/dockerize-devbox.svg?branch=master)](https://travis-ci.com/wangkuiyi/dockerize-devbox)
+
 The purpose of this Dockerfile is to unify daily software development
 environments.  We install compilers, editors, and all other tools,
 together with their configurations, into a Docker image, so engineers
