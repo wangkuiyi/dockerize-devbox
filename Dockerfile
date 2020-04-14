@@ -78,3 +78,9 @@ ENV NOTVISIBLE "in users profile"
 RUN sudo sh -c 'echo "export VISIBLE=now" >> /etc/profile'
 EXPOSE 22
 CMD ["sudo", "/usr/sbin/sshd", "-D"]
+
+# As a devbox, we need to install compilers of various languages, pretty 
+# printers, editors, etc.  To make it easy to customize, we assme subdirectories
+# like dockerize-git, dockerize-emacs, dockerize-python, etc.
+COPY . /dockerize-devbox
+RUN for i in /dockerize-devbox/dockerize-*; do source $i/$(basename $i).sh; done
