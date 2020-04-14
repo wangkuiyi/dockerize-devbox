@@ -35,7 +35,7 @@ You should be able to run Docker commands in the container.
 sudo docker version
 ```
 
-You can also connect to the container via SSH from Visual Studio Code.  To do 
+You can also connect to the container via SSH from Visual Studio Code.  To do
 so, you need to
 
 1. Follow [the guide](https://code.visualstudio.com/docs/remote/remote-overview)
@@ -51,4 +51,6 @@ so, you need to
       Port 2222
    ```
 
-Please change the username `yi` into your username.  Now, you can type F1 in VS Code and type the command `Remote-SSH: Connect to host...`, choose the host named `docker`, and connect.
+Please change the username `yi` into your username.  Now, you can type F1 in
+Visual Studio Code and type the command `Remote-SSH: Connect to host...`,
+choose the host named `docker`, and connect.
