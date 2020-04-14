@@ -1,0 +1,13 @@
+language: minimal
+
+services:
+    - docker
+
+before-install:
+    - docker build --build-arg USER=yi -t dev .
+
+deploy:
+    provider: script
+    script: bash .travis-ci/docker_push.sh
+    on:
+        branch: master
