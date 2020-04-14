@@ -1,3 +1,5 @@
+# Dockerize DevBox
+
 The purpose of this Dockerfile is to unify daily software development
 environments.  We install compilers, editors, and all other tools,
 together with their configurations, into a Docker image, so engineers
@@ -33,13 +35,15 @@ You should be able to run Docker commands in the container.
 sudo docker version
 ```
 
-You can also connect to the container via SSH from Visual Studio Code.  To do so, you need to
+You can also connect to the container via SSH from Visual Studio Code.  To do 
+so, you need to
 
-1. Follow [this guide](https://code.visualstudio.com/docs/remote/remote-overview) to install the Remote Development extension pack.
+1. Follow [the guide](https://code.visualstudio.com/docs/remote/remote-overview)
+   to install the Remote Development extension pack.
 
-1. Edit your SSH configuration file `~/.ssh/config` and add the following section.
+2. Add the following section to your SSH configuration file `~/.ssh/config`.
 
-   ```
+   ```text
    Host docker
       UseKeychain yes
       HostName localhost
@@ -47,4 +51,4 @@ You can also connect to the container via SSH from Visual Studio Code.  To do so
       Port 2222
    ```
 
-Now, you can type F1 in VS Code and type the command `Remote-SSH: Connect to host...`, choose the host named `docker`, and connect.
+Please change the username `yi` into your username.  Now, you can type F1 in VS Code and type the command `Remote-SSH: Connect to host...`, choose the host named `docker`, and connect.
