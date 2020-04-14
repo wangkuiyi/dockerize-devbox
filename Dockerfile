@@ -81,6 +81,12 @@ CMD ["sudo", "/usr/sbin/sshd", "-D"]
 
 # As a devbox, we need to install compilers of various languages, pretty 
 # printers, editors, etc.  To make it easy to customize, we assme subdirectories
-# like dockerize-git, dockerize-emacs, dockerize-python, etc.
+# like dockerize-git, dockerize-emacs, dockerize-python, etc.  The following
+# script executes dockerize-*/*.sh in each of these subdirectories.
+# Please be aware that the use of sort introduces an explicit order of
+# execution.
 COPY . /dockerize-devbox
-RUN for i in /dockerize-devbox/dockerize-*; do source $i/$(basename $i).sh; done
+RUN for i in $(du -a /dockerize-devbox | cut -f 2 | \
+               grep 'dockerize-.*\.sh$'| sort); do \
+      . $i; \
+    done
