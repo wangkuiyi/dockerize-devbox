@@ -83,13 +83,15 @@ CMD ["sudo", "/usr/sbin/sshd", "-D"]
 # printers, editors, etc.  To make it easy to customize, we assme subdirectories
 # like dockerize-git, dockerize-emacs, dockerize-python, etc.  The following
 # script executes dockerize-*/*.sh in each of these subdirectories.
-# Please be aware that the use of sort introduces an explicit order of
-# execution.
-COPY . /dockerize-devbox
-RUN for i in $(du -a /dockerize-devbox/dockerize-* | \
-               cut -f 2 | \
-               grep 'dockerize-.*\.sh$'| \
-               sort); do \
-      echo "========= $i"; \
-      . $i; \
-    done
+# Please be aware that the following list implies the execution order.
+COPY ./dockerize-bash /dockerize-bash
+RUN /dockerize-bash/dockerize-bash.sh
+
+COPY ./dockerize-python /dockerize-python
+RUN /dockerize-python/dockerize-python.sh
+
+COPY ./dockerize-go /dockerize-go
+RUN /dockerize-go/dockerize-go.sh
+
+COPY ./dockerize-pandoc /dockerize-pandoc
+RUN /dockerize-pandoc/dockerize-pandoc.sh
