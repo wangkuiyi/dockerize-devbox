@@ -2,13 +2,19 @@
 
 [![Build Status](https://travis-ci.com/wangkuiyi/dockerize-devbox.svg?branch=master)](https://travis-ci.com/wangkuiyi/dockerize-devbox)
 
-The purpose of this Dockerfile is to unify daily software development
-environments.  We install compilers, editors, and all other tools,
-together with their configurations, into a Docker image, so engineers
-can run the Docker image (as a container) as their unified development
+This project defines a Dockerfile to unify daily software development
+environments.  By installing development tools into a Docker image, engineers
+can run the Docker image as a container as their unified development
 environment.
 
-To run the pre-built Docker image
+- This Docker image has a non-root user `a` with password `a`.
+- This Docker image contains OpenSSH server.  You can SSH into the container as user `a`.
+- You can run the `docker` command in the container.
+- You can sudo in the container.
+
+## Qucik Start
+
+To run the pre-built Docker image, type the following command.
 
 ```bash
 docker run --rm -d --name dev -p 2222:22 \
@@ -33,22 +39,6 @@ You should be able to run Docker commands in the container.
 sudo docker version
 ```
 
-You can also connect to the container via SSH from Visual Studio Code.  To do
-so, you need to
+## Use Cases
 
-1. Follow [the guide](https://code.visualstudio.com/docs/remote/remote-overview)
-   to install the Remote Development extension pack.
-
-2. Add the following section to your SSH configuration file `~/.ssh/config`.
-
-   ```text
-   Host docker
-      UseKeychain yes
-      HostName localhost
-      User a
-      Port 2222
-   ```
-
-Please change the username `a` into your username.  Now, you can type F1 in
-Visual Studio Code and type the command `Remote-SSH: Connect to host...`,
-choose the host named `docker`, and connect.
+1. You can run the container on a remote development server, and connect to the container via SSH from your Visual Studio Code running on a laptop computer.  For details, please refer to [this page](https://github.com/wangkuiyi/dockerize-devbox/wiki/Use-DevBox-Container-with-Visual-Studio-Code).
