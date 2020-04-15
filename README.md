@@ -12,6 +12,10 @@ environment.
 - You can run the `docker` command in the container.
 - You can sudo in the container.
 
+TODO:
+
+- Access CUDA on the host from the container.
+
 ## Qucik Start
 
 To run the pre-built Docker image, type the following command.
