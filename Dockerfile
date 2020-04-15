@@ -1,4 +1,6 @@
-ARG FROM_IMAGE=ubuntu:20.04
+# According to https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#system-requirements,
+# the highest Ubuntu version with CUDA support is 18.04.
+ARG FROM_IMAGE=ubuntu:18.04
 FROM $FROM_IMAGE
 
 # By default, we work as the root user in Docker containers.  Doing
