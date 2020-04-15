@@ -97,3 +97,6 @@ RUN /dockerize-go/dockerize-go.sh
 
 COPY ./dockerize-pandoc /dockerize-pandoc
 RUN /dockerize-pandoc/dockerize-pandoc.sh
+
+COPY ./dockerize-pre-commit /dockerize-pre-commit
+RUN /dockerize-pre-commit/dockerize-pre-commit.sh
